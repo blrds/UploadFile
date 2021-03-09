@@ -17,15 +17,17 @@ namespace UploadFile
             InitializeComponent();
         }
 
-        UploadFileUser user=null;
-        string filePath="";
+        UploadFileUser user = null;
+        string filePath = "";
         private void FileChoose_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
                 openFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
                 openFileDialog.FilterIndex = 2;
                 openFileDialog.RestoreDirectory = true;
-                if (openFileDialog.ShowDialog() == DialogResult.OK) {
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
                     filePath = openFileDialog.FileName;
                 }
             }
@@ -35,7 +37,7 @@ namespace UploadFile
         private void Start_Click(object sender, EventArgs e)
         {
             if (filePath == "") filePath = "txt.txt";
-            user = new UploadFileUser(Convert.ToInt64(textBox1.Text), checkBox1.Enabled,filePath);
+            user = new UploadFileUser(Convert.ToInt64(textBox1.Text), checkBox1.Checked, filePath);
             groupBox2.Enabled = true;
         }
 
@@ -46,7 +48,7 @@ namespace UploadFile
                 e.Handled = true;
             }
 
-           
+
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -81,20 +83,33 @@ namespace UploadFile
             {
                 try
                 {
-                    pair = user.Item(Convert.ToInt64(Index.Text)); 
+                    pair = user.Item(Convert.ToInt64(Index.Text));
                     Item.Text = pair.Item1;
                     label4.Text = pair.Item2.ToString();
                 }
-                catch (Exception exc) {
-                    MessageBox.Show(exc.Message,"ERROR",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                catch (Exception exc)
+                {
+                    MessageBox.Show(exc.Message, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                
+
             }
             if (Write.Checked)
-                label4.Text=user.Write(Item.Text, Convert.ToInt64(Index.Text)).ToString();
-            if (Delete.Checked)
-                label4.Text = user.Delete(Convert.ToInt64(Index.Text)).ToString();
+                try
+                {
+                    label4.Text = user.Write(Item.Text, Convert.ToInt64(Index.Text)).ToString();
+                }
+                catch (Exception exc)
+                {
+                    MessageBox.Show(exc.Message, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            if (Delete.Checked) try
+                {
+                    label4.Text = user.Delete(Convert.ToInt64(Index.Text)).ToString();
+                }
+                catch (Exception exc)
+                {
+                    MessageBox.Show(exc.Message, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
         }
-
     }
 }
